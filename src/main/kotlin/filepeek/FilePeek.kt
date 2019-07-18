@@ -33,7 +33,8 @@ class FilePeek(
             else -> "build/classes/test" // older gradle
         }
 
-        val sourceFile = sequenceOf("src/test/kotlin", "src/test/java")
+        val sourceRoots = sequenceOf("src/test/kotlin", "src/test/java")
+        val sourceFileCandidates = sourceRoots
             .map { sourceRoot ->
                 val sourceFileWithoutExtension =
                     classFilePath.replace(buildDir, sourceRoot)
@@ -41,7 +42,8 @@ class FilePeek(
 
                 File(sourceFileWithoutExtension).parentFile
                     .resolve(callerStackTraceElement.fileName)
-            }.single(File::exists)
+            }
+        val sourceFile = sourceFileCandidates.single(File::exists)
 
         val callerLine = sourceFile.bufferedReader().useLines { lines ->
             var braceDelta = 0
