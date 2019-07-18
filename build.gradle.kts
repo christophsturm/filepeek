@@ -105,7 +105,7 @@ plugins.withId("info.solidsoft.pitest") {
         avoidCallsTo = setOf("kotlin.jvm.internal")
         mutators = setOf("NEW_DEFAULTS")
         targetClasses = setOf("filepeek.*")  //by default "${project.group}.*"
-        targetTests = setOf("filepeek.*")
+        targetTests = setOf("filepeek.*", "filepeektest.*")
         pitestVersion = "1.4.9"
         threads = System.getenv("PITEST_THREADS")?.toInt() ?: Runtime.getRuntime().availableProcessors()
         outputFormats = setOf("XML", "HTML")
