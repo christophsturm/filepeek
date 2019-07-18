@@ -2,18 +2,19 @@ package filepeek
 
 import java.io.File
 
-internal data class FileInfo(
+data class FileInfo(
     val lineNumber: Int,
     val sourceFileName: String,
     val line: String
 )
 
-internal object FilePeek {
-    private val STRIKT_PACKAGES = listOf("strikt.internal", "strikt.api")
+class FilePeek(
+    private val ignoredPackages: List<String> = emptyList()
+) {
 
     fun getCallerFileInfo(
         filter: (StackTraceElement) -> Boolean = { el ->
-            STRIKT_PACKAGES
+            ignoredPackages
                 .none { el.className.startsWith(it) }
         }
     ): FileInfo {
