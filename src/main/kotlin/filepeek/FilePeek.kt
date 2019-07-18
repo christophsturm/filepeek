@@ -9,7 +9,8 @@ data class FileInfo(
 )
 
 class FilePeek(
-    private val ignoredPackages: List<String> = emptyList()
+    private val ignoredPackages: List<String> = emptyList(),
+    val sourceRoots: Sequence<String> = sequenceOf("src/test/kotlin", "src/test/java")
 ) {
 
     fun getCallerFileInfo(
@@ -32,8 +33,7 @@ class FilePeek(
             else -> "build/classes/test" // older gradle
         }
 
-        val sourceRoots = sequenceOf("src/test/kotlin", "src/test/java")
-        val sourceFileCandidates = sourceRoots
+        val sourceFileCandidates = this.sourceRoots
             .map { sourceRoot ->
                 val sourceFileWithoutExtension =
                     classFilePath.replace(buildDir, sourceRoot)
