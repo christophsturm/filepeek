@@ -3,13 +3,13 @@ package filepeek
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-class ParsedMethodCallTest {
+class LambdaBodyTest {
 
     @Test
-    fun `knows the body`() {
+    fun `extracts the body`() {
         Assertions.assertEquals(
             "name",
-            ParsedMethodCall("""get { name }.isEqualTo("Ziggy")""", "get").body
+            LambdaBody("get", """get { name }.isEqualTo("Ziggy")""").body
         )
     }
 
@@ -17,7 +17,7 @@ class ParsedMethodCallTest {
     fun `works with different method names`() {
         Assertions.assertEquals(
             "name",
-            ParsedMethodCall("""callMe { name }.isEqualTo("Ziggy")""", "callMe").body
+            LambdaBody("callMe", """callMe { name }.isEqualTo("Ziggy")""").body
         )
     }
 }

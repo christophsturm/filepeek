@@ -1,6 +1,6 @@
 package filepeek
 
-class ParsedMethodCall(line: String, methodName: String) {
+class LambdaBody(methodName: String, line: String) {
     val body: String
 
     init {
