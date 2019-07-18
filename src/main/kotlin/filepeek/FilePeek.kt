@@ -31,6 +31,7 @@ class FilePeek(
             classFilePath.contains("/out/") -> "out/test/classes" // running inside IDEA
             classFilePath.contains("build/classes/java") -> "build/classes/java/test" // gradle 4.x java source
             classFilePath.contains("build/classes/kotlin") -> "build/classes/kotlin/test" // gradle 4.x kotlin sources
+            classFilePath.contains("target/classes") -> "target/classes" // maven
             else -> "build/classes/test" // older gradle
         }
 
