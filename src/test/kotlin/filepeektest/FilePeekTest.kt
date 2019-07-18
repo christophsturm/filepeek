@@ -21,6 +21,8 @@ class FilePeekTest {
                 .endsWith(fileName)
             get(FileInfo::line)
                 .isEqualTo("""val fileInfo = filePeek.getCallerFileInfo()""")
+            get(FileInfo::methodName)
+                .isEqualTo("""can get FileInfo""")
         }
     }
 

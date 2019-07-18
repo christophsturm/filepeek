@@ -5,7 +5,8 @@ import java.io.File
 data class FileInfo(
     val lineNumber: Int,
     val sourceFileName: String,
-    val line: String
+    val line: String,
+    val methodName: String
 )
 
 class FilePeek(
@@ -58,7 +59,9 @@ class FilePeek(
         return FileInfo(
             callerStackTraceElement.lineNumber,
             sourceFileName = sourceFile.absolutePath,
-            line = callerLine.trim()
+            line = callerLine.trim(),
+            methodName = callerStackTraceElement.methodName
+
         )
     }
 }
