@@ -1,6 +1,20 @@
+[![Download](https://api.bintray.com/packages/christophsturm/maven/filepeek/images/download.svg)](https://bintray.com/christophsturm/maven/filepeek/_latestVersion)
+[![CircleCI](https://circleci.com/gh/christophsturm/filepeek/tree/master.svg?style=svg)](https://circleci.com/gh/christophsturm/filepeek/tree/master)
+
 # FilePeek
 
 FilePeek is a library that finds sourcecode to be used in assertion libs and test runners.
+
+Get it from bintray:
+```
+repositories {
+    jcenter() // or
+    // maven { url  "https://dl.bintray.com/christophsturm/maven" }
+}
+dependencies{
+    implementation("com.christophsturm:filepeek:0.1.1")
+}
+```
 
 I originally wrote it for my poc assertion lib asserto, then integrated it into stri.kt and now extracted it for use in atrium.
 
@@ -37,4 +51,3 @@ there is also a utility class that extracts a lambda body from a method call
     }
 ```
 
-[![CircleCI](https://circleci.com/gh/christophsturm/filepeek/tree/master.svg?style=svg)](https://circleci.com/gh/christophsturm/filepeek/tree/master)
