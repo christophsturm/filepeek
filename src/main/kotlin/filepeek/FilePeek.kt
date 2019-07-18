@@ -13,14 +13,13 @@ class FilePeek(
 ) {
 
     fun getCallerFileInfo(
-        filter: (StackTraceElement) -> Boolean = { el ->
-            ignoredPackages
-                .none { el.className.startsWith(it) }
-        }
     ): FileInfo {
         val stackTrace = RuntimeException().stackTrace
 
-        val callerStackTraceElement = stackTrace.first(filter)
+        val callerStackTraceElement = stackTrace.first({ el ->
+            ignoredPackages
+                .none { el.className.startsWith(it) }
+        })
         val className = callerStackTraceElement.className.substringBefore('$')
         val clazz = javaClass.classLoader.loadClass(className)!!
         val classFilePath = File(clazz.protectionDomain.codeSource.location.path)
