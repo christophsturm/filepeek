@@ -17,10 +17,10 @@ class FilePeek(
     ): FileInfo {
         val stackTrace = RuntimeException().stackTrace
 
-        val callerStackTraceElement = stackTrace.first({ el ->
+        val callerStackTraceElement = stackTrace.first { el ->
             ignoredPackages
                 .none { el.className.startsWith(it) }
-        })
+        }
         val className = callerStackTraceElement.className.substringBefore('$')
         val clazz = javaClass.classLoader.loadClass(className)!!
         val classFilePath = File(clazz.protectionDomain.codeSource.location.path)
@@ -40,7 +40,7 @@ class FilePeek(
                         .plus("/" + className.replace(".", "/"))
 
                 File(sourceFileWithoutExtension).parentFile
-                    .resolve(callerStackTraceElement.fileName)
+                    .resolve(callerStackTraceElement.fileName!!)
             }
         val sourceFile = sourceFileCandidates.single(File::exists)
 
