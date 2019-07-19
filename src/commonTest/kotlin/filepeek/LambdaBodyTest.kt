@@ -1,13 +1,13 @@
 package filepeek
 
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class LambdaBodyTest {
 
     @Test
     fun `extracts the body`() {
-        Assertions.assertEquals(
+        assertEquals(
             "name",
             LambdaBody("get", """get { name }.isEqualTo("Ziggy")""").body
         )
@@ -15,7 +15,7 @@ class LambdaBodyTest {
 
     @Test
     fun `works with different method names`() {
-        Assertions.assertEquals(
+        assertEquals(
             "name",
             LambdaBody("callMe", """callMe { name }.isEqualTo("Ziggy")""").body
         )

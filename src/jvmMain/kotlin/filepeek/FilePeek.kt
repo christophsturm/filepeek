@@ -2,19 +2,12 @@ package filepeek
 
 import java.io.File
 
-data class FileInfo(
-    val lineNumber: Int,
-    val sourceFileName: String,
-    val line: String,
-    val methodName: String
-)
-
-class FilePeek(
-    private val ignoredPackages: List<String> = emptyList(),
-    val sourceRoots: List<String> = listOf("src/test/kotlin", "src/test/java")
+actual class FilePeek actual constructor(
+    private val ignoredPackages: List<String> ,
+    private val sourceRoots: List<String>
 ) {
 
-    fun getCallerFileInfo(
+    actual fun getCallerFileInfo(
     ): FileInfo {
         val stackTrace = RuntimeException().stackTrace
 
@@ -30,7 +23,11 @@ class FilePeek(
         val buildDir = when {
             classFilePath.contains("/out/") -> "out/test/classes" // running inside IDEA
             classFilePath.contains("build/classes/java") -> "build/classes/java/test" // gradle 4.x java source
-            classFilePath.contains("build/classes/kotlin") -> "build/classes/kotlin/test" // gradle 4.x kotlin sources
+            //TODO most likely these two lines need a fix
+            classFilePath.contains("build/classes/kotlin/jvm") -> "build/classes/kotlin/jvm/test" // gradle 4.x kotlin multi-platform sources jvm
+            classFilePath.contains("build/classes/kotlin/js") -> "build/classes/kotlin/js/test" // gradle 4.x kotlin multi-platform sources js
+
+            classFilePath.contains("build/classes/kotlin/test") -> "build/classes/kotlin/test" // gradle 4.x kotlin sources
             classFilePath.contains("target/classes") -> "target/classes" // maven
             else -> "build/classes/test" // older gradle
         }
@@ -83,4 +80,3 @@ internal fun <T> Sequence<T>.takeWhileInclusive(pred: (T) -> Boolean): Sequence<
 class SourceFileNotFoundException(classFilePath: String, className: String, candidates: List<File>) :
     java.lang.RuntimeException("did not find source file for class $className loaded from $classFilePath. tried: ${candidates.joinToString { it.path }}") {
 }
-

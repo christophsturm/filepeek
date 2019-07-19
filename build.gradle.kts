@@ -5,11 +5,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val junit5Version = "5.5.0"
 val junitPlatformVersion = "1.5.0"
-val kotlinVersion = "1.3.41"
 
 plugins {
-    java
-    kotlin("jvm") version "1.3.41"
+    kotlin("multiplatform") version "1.3.41"
     id("com.github.ben-manes.versions") version "0.21.0"
     `maven-publish`
     id("com.jfrog.bintray") version "1.8.4"
@@ -34,17 +32,55 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    compile(kotlin("stdlib-jdk8", kotlinVersion))
-    compile(kotlin("reflect", kotlinVersion))
-    testImplementation("io.strikt:strikt-core:0.21.1")
-    testImplementation("dev.minutest:minutest:1.7.0")
+kotlin {
+    jvm {
+        withJava()
+    }
+    js()
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(kotlin("stdlib-common"))
+            }
+        }
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test-common"))
+                implementation(kotlin("test-annotations-common"))
+            }
+        }
+        jvm().compilations["main"].defaultSourceSet {
+            dependencies {
+                implementation(kotlin("stdlib"))
+                implementation(kotlin("reflect"))
+            }
+        }
+        jvm().compilations["test"].defaultSourceSet {
+            dependencies {
+                implementation("io.strikt:strikt-core:0.21.1")
+                implementation("dev.minutest:minutest:1.7.0")
+                implementation(kotlin("test"))
+                implementation(kotlin("test-junit5"))
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$junit5Version")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitPlatformVersion")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junit5Version")
+                implementation("org.junit.jupiter:junit-jupiter-api:$junit5Version")
+                runtimeOnly("org.junit.platform:junit-platform-launcher:$junitPlatformVersion")
+                runtimeOnly("org.junit.jupiter:junit-jupiter-engine:$junit5Version")
 
+            }
+        }
+        js().compilations["main"].defaultSourceSet {
+            dependencies {
+                implementation(kotlin("stdlib-js"))
+            }
+        }
+        js().compilations["test"].defaultSourceSet {
+            dependencies {
+                implementation(kotlin("test-js"))
+            }
+        }
+    }
 }
+
 
 configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_1_8
