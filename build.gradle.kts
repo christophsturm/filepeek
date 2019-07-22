@@ -1,5 +1,6 @@
 import com.jfrog.bintray.gradle.BintrayExtension
 import info.solidsoft.gradle.pitest.PitestPluginExtension
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val junit5Version = "5.5.0"
@@ -57,6 +58,7 @@ tasks {
             includeEngines("junit-jupiter")
         }
         testLogging {
+            exceptionFormat = TestExceptionFormat.FULL
             events("passed", "skipped", "failed")
         }
     }
