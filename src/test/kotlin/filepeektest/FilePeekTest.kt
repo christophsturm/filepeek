@@ -47,7 +47,7 @@ class FilePeekTest {
     @Test
     fun `throws a useful exception when the file is not found`() {
         // this filepeek instance excludes the tests so it will not find the source
-        val filePeek = FilePeek(listOf("filepeek."), sequenceOf())
+        val filePeek = FilePeek(listOf("filepeek."), listOf())
         expectCatching {
             filePeek.getCallerFileInfo()
         }.failed().isA<SourceFileNotFoundException>().get(Throwable::message).isNotNull().and {
@@ -57,15 +57,20 @@ class FilePeekTest {
     }
 
     @Test
-    fun `can get block body even when it contains multiple `() {
-
+    fun `can get lambda body even when it contains multiple blocks`() {
+// @formatter:off (the next block is formatted uneven to check that brackets are counted correctly
         val fileInfo = mapMethod {
-            /* LOL! I'm a block body*/
-            listOf(1, 2, 3).map { it }
+            listOf(1).map { listOf(1).map {it}}
+        }
+        val fileInfo2 = mapMethod {listOf(1).map { listOf(1).map {it}
+            }
         }
 
+// @formatter:on
         expectThat(fileInfo).get(FileInfo::line)
-            .isEqualTo("val fileInfo = mapMethod {/* LOL! I'm a block body*/listOf(1, 2, 3).map { it }}")
+            .isEqualTo("val fileInfo = mapMethod {listOf(1).map { listOf(1).map {it}}}")
+        expectThat(fileInfo2).get(FileInfo::line)
+            .isEqualTo("val fileInfo2 = mapMethod {listOf(1).map { listOf(1).map {it}}}")
     }
 }
 
