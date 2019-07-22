@@ -35,7 +35,7 @@ class FilePeek(
             else -> "build/classes/test" // older gradle
         }
 
-        val sourceFileCandidates = this.sourceRoots
+        val sourceFileCandidates = this.sourceRoots.toList()
             .map { sourceRoot ->
                 val sourceFileWithoutExtension =
                     classFilePath.replace(buildDir, sourceRoot)
@@ -44,7 +44,11 @@ class FilePeek(
                 File(sourceFileWithoutExtension).parentFile
                     .resolve(callerStackTraceElement.fileName!!)
             }
-        val sourceFile = sourceFileCandidates.single(File::exists)
+        val sourceFile = sourceFileCandidates.singleOrNull(File::exists) ?: throw SourceFileNotFoundException(
+            classFilePath,
+            className,
+            sourceFileCandidates
+        )
 
         val callerLine = sourceFile.bufferedReader().useLines { lines ->
             var braceDelta = 0
@@ -76,5 +80,7 @@ internal fun <T> Sequence<T>.takeWhileInclusive(pred: (T) -> Boolean): Sequence<
     }
 }
 
-internal class SourceFileNotFoundException(classFilePath: String) :
-    java.lang.RuntimeException("did not find source file for class file $classFilePath")
+class SourceFileNotFoundException(classFilePath: String, className: String, candidates: List<File>) :
+    java.lang.RuntimeException("did not find source file for class $className loaded from $classFilePath. tried: ${candidates.joinToString { it.path }}") {
+}
+
