@@ -11,7 +11,7 @@ data class FileInfo(
 
 class FilePeek(
     private val ignoredPackages: List<String> = emptyList(),
-    val sourceRoots: Sequence<String> = sequenceOf("src/test/kotlin", "src/test/java")
+    val sourceRoots: List<String> = listOf("src/test/kotlin", "src/test/java")
 ) {
 
     fun getCallerFileInfo(
@@ -44,7 +44,11 @@ class FilePeek(
                 File(sourceFileWithoutExtension).parentFile
                     .resolve(callerStackTraceElement.fileName!!)
             }
-        val sourceFile = sourceFileCandidates.single(File::exists)
+        val sourceFile = sourceFileCandidates.singleOrNull(File::exists) ?: throw SourceFileNotFoundException(
+            classFilePath,
+            className,
+            sourceFileCandidates
+        )
 
         val callerLine = sourceFile.bufferedReader().useLines { lines ->
             var braceDelta = 0
@@ -76,5 +80,7 @@ internal fun <T> Sequence<T>.takeWhileInclusive(pred: (T) -> Boolean): Sequence<
     }
 }
 
-internal class SourceFileNotFoundException(classFilePath: String) :
-    java.lang.RuntimeException("did not find source file for class file $classFilePath")
+class SourceFileNotFoundException(classFilePath: String, className: String, candidates: List<File>) :
+    java.lang.RuntimeException("did not find source file for class $className loaded from $classFilePath. tried: ${candidates.joinToString { it.path }}") {
+}
+
