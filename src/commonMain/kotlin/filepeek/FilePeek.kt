@@ -9,7 +9,7 @@ data class FileInfo(
 
 expect class FilePeek(
     ignoredPackages: List<String> = emptyList(),
-    sourceRoots: List<String> = listOf("src/test/kotlin", "src/test/java")
+    sourceRoots: List<String> = listOf("src/test/kotlin", "src/test/java", "src/jvmTest/kotlin", "src/jvmTest/java")
 ){
     fun getCallerFileInfo(): FileInfo
 }

@@ -15,7 +15,7 @@ import strikt.assertions.isNotNull
 import strikt.assertions.startsWith
 
 class FilePeekTest {
-    private val fileName = "src/test/kotlin/filepeektest/FilePeekTest.kt"
+    private val fileName = "src/jvmTest/kotlin/filepeektest/FilePeekTest.kt"
 
     private val filePeek = FilePeek(listOf("filepeek."))
     @Test
