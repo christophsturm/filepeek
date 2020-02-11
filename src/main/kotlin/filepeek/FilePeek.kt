@@ -9,9 +9,11 @@ data class FileInfo(
     val methodName: String
 )
 
+private val FS = File.separator
+
 class FilePeek(
     private val ignoredPackages: List<String> = emptyList(),
-    val sourceRoots: List<String> = listOf("src/test/kotlin", "src/test/java")
+    val sourceRoots: List<String> = listOf("src${FS}test${FS}kotlin", "src${FS}test${FS}java")
 ) {
 
     fun getCallerFileInfo(
@@ -28,18 +30,18 @@ class FilePeek(
             .absolutePath
 
         val buildDir = when {
-            classFilePath.contains("/out/") -> "out/test/classes" // running inside IDEA
-            classFilePath.contains("build/classes/java") -> "build/classes/java/test" // gradle 4.x java source
-            classFilePath.contains("build/classes/kotlin") -> "build/classes/kotlin/test" // gradle 4.x kotlin sources
-            classFilePath.contains("target/classes") -> "target/classes" // maven
-            else -> "build/classes/test" // older gradle
+            classFilePath.contains("${FS}out${FS}") -> "out${FS}test${FS}classes" // running inside IDEA
+            classFilePath.contains("build${FS}classes${FS}java") -> "build${FS}classes${FS}java${FS}test" // gradle 4.x java source
+            classFilePath.contains("build${FS}classes${FS}kotlin") -> "build${FS}classes${FS}kotlin${FS}test" // gradle 4.x kotlin sources
+            classFilePath.contains("target${FS}classes") -> "target${FS}classes" // maven
+            else -> "build${FS}classes${FS}test" // older gradle
         }
 
         val sourceFileCandidates = this.sourceRoots
             .map { sourceRoot ->
                 val sourceFileWithoutExtension =
                     classFilePath.replace(buildDir, sourceRoot)
-                        .plus("/" + className.replace(".", "/"))
+                        .plus("${FS}" + className.replace(".", "${FS}"))
 
                 File(sourceFileWithoutExtension).parentFile
                     .resolve(callerStackTraceElement.fileName!!)

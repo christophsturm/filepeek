@@ -13,9 +13,12 @@ import strikt.assertions.isA
 import strikt.assertions.isEqualTo
 import strikt.assertions.isNotNull
 import strikt.assertions.startsWith
+import java.io.File
+
+private val FS = File.separator
 
 class FilePeekTest {
-    private val fileName = "src/test/kotlin/filepeektest/FilePeekTest.kt"
+    private val fileName = "src${FS}test${FS}kotlin${FS}filepeektest${FS}FilePeekTest.kt"
 
     private val filePeek = FilePeek(listOf("filepeek."))
     @Test
