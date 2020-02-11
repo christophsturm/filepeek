@@ -3,17 +3,17 @@ import info.solidsoft.gradle.pitest.PitestPluginExtension
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val junit5Version = "5.5.0"
-val junitPlatformVersion = "1.5.0"
-val kotlinVersion = "1.3.41"
+val junit5Version = "5.6.0"
+val junitPlatformVersion = "1.6.0"
+val kotlinVersion = "1.3.61"
 
 plugins {
     java
-    kotlin("jvm") version "1.3.41"
-    id("com.github.ben-manes.versions") version "0.21.0"
+    kotlin("jvm") version "1.3.61"
+    id("com.github.ben-manes.versions") version "0.27.0"
     `maven-publish`
     id("com.jfrog.bintray") version "1.8.4"
-    id("info.solidsoft.pitest") version "1.4.0"
+    id("info.solidsoft.pitest") version "1.4.6"
 
 }
 
@@ -23,7 +23,7 @@ version = "0.1.1"
 buildscript {
     configurations.maybeCreate("pitest")
     dependencies {
-        "pitest"("org.pitest:pitest-junit5-plugin:0.9")
+        "pitest"("org.pitest:pitest-junit5-plugin:0.12")
     }
 }
 
@@ -38,7 +38,7 @@ dependencies {
     compile(kotlin("stdlib-jdk8", kotlinVersion))
     compile(kotlin("reflect", kotlinVersion))
     testImplementation("io.strikt:strikt-core:0.21.1")
-    testImplementation("dev.minutest:minutest:1.7.0")
+    testImplementation("dev.minutest:minutest:1.10.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junit5Version")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitPlatformVersion")
@@ -102,14 +102,14 @@ bintray {
 
 plugins.withId("info.solidsoft.pitest") {
     configure<PitestPluginExtension> {
-        jvmArgs = listOf("-Xmx512m")
-        testPlugin = "junit5"
-        avoidCallsTo = setOf("kotlin.jvm.internal")
-        mutators = setOf("NEW_DEFAULTS")
-        targetClasses = setOf("filepeek.*")  //by default "${project.group}.*"
-        targetTests = setOf("filepeek.*", "filepeektest.*")
-        pitestVersion = "1.4.9"
-        threads = System.getenv("PITEST_THREADS")?.toInt() ?: Runtime.getRuntime().availableProcessors()
-        outputFormats = setOf("XML", "HTML")
+        jvmArgs.set(listOf("-Xmx512m"))
+        testPlugin.set("junit5")
+        avoidCallsTo.set(setOf("kotlin.jvm.internal"))
+//        mutators.set(setOf("NEW_DEFAULTS"))
+        targetClasses.set(setOf("filepeek.*"))  //by default "${project.group}.*"
+        targetTests.set(setOf("filepeek.*", "filepeektest.*"))
+        pitestVersion.set("1.4.11")
+        threads.set(System.getenv("PITEST_THREADS")?.toInt() ?: Runtime.getRuntime().availableProcessors())
+        outputFormats.set(setOf("XML", "HTML"))
     }
 }
