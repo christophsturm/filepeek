@@ -35,9 +35,9 @@ repositories {
 }
 
 dependencies {
-    compile(kotlin("stdlib-jdk8", kotlinVersion))
-    compile(kotlin("reflect", kotlinVersion))
-    testImplementation("io.strikt:strikt-core:0.21.1")
+    implementation(kotlin("stdlib-jdk8", kotlinVersion))
+    implementation(kotlin("reflect", kotlinVersion))
+    testImplementation("io.strikt:strikt-core:0.23.7")
     testImplementation("dev.minutest:minutest:1.10.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junit5Version")
