@@ -13,7 +13,7 @@ private val FS = File.separator
 
 class FilePeek(
     private val ignoredPackages: List<String> = emptyList(),
-    val sourceRoots: List<String> = listOf("src${FS}test${FS}kotlin", "src${FS}test${FS}java")
+    private val sourceRoots: List<String> = listOf("src${FS}test${FS}kotlin", "src${FS}test${FS}java")
 ) {
 
     fun getCallerFileInfo(
@@ -41,7 +41,7 @@ class FilePeek(
             .map { sourceRoot ->
                 val sourceFileWithoutExtension =
                     classFilePath.replace(buildDir, sourceRoot)
-                        .plus("${FS}" + className.replace(".", "${FS}"))
+                        .plus(FS + className.replace(".", FS))
 
                 File(sourceFileWithoutExtension).parentFile
                     .resolve(callerStackTraceElement.fileName!!)
@@ -83,6 +83,5 @@ internal fun <T> Sequence<T>.takeWhileInclusive(pred: (T) -> Boolean): Sequence<
 }
 
 class SourceFileNotFoundException(classFilePath: String, className: String, candidates: List<File>) :
-    java.lang.RuntimeException("did not find source file for class $className loaded from $classFilePath. tried: ${candidates.joinToString { it.path }}") {
-}
+    java.lang.RuntimeException("did not find source file for class $className loaded from $classFilePath. tried: ${candidates.joinToString { it.path }}")
 
