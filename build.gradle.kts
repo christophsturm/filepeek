@@ -3,17 +3,17 @@ import info.solidsoft.gradle.pitest.PitestPluginExtension
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val junit5Version = "5.6.0"
-val junitPlatformVersion = "1.6.0"
-val kotlinVersion = "1.3.61"
+val junit5Version = "5.7.0"
+val junitPlatformVersion = "1.7.0"
+val kotlinVersion = "1.4.21-2"
 
 plugins {
     java
-    kotlin("jvm") version "1.3.61"
-    id("com.github.ben-manes.versions") version "0.27.0"
+    kotlin("jvm") version "1.4.21-2"
+    id("com.github.ben-manes.versions") version "0.36.0"
     `maven-publish`
-    id("com.jfrog.bintray") version "1.8.4"
-    id("info.solidsoft.pitest") version "1.4.6"
+    id("com.jfrog.bintray") version "1.8.5"
+    id("info.solidsoft.pitest") version "1.5.2"
 
 }
 
@@ -37,7 +37,7 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib-jdk8", kotlinVersion))
     implementation(kotlin("reflect", kotlinVersion))
-    testImplementation("io.strikt:strikt-core:0.23.7")
+    testImplementation("io.strikt:strikt-core:0.28.1")
     testImplementation("dev.minutest:minutest:1.10.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junit5Version")
@@ -113,3 +113,24 @@ plugins.withId("info.solidsoft.pitest") {
         outputFormats.set(setOf("XML", "HTML"))
     }
 }
+
+tasks.named<com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask>("dependencyUpdates") {
+    val filtered =
+        listOf("alpha", "beta", "rc", "cr", "m", "preview", "dev", "eap")
+            .map { qualifier -> Regex("(?i).*[.-]$qualifier[.\\d-]*.*") }
+    resolutionStrategy {
+        componentSelection {
+            all {
+                if (filtered.any { it.matches(candidate.version) }) {
+                    reject("Release candidate")
+                }
+            }
+        }
+        // optional parameters
+        checkForGradleUpdate = true
+        outputFormatter = "json"
+        outputDir = "build/dependencyUpdates"
+        reportfileName = "report"
+    }
+}
+tasks.wrapper { distributionType = Wrapper.DistributionType.ALL }
