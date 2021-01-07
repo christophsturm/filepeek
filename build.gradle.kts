@@ -20,14 +20,6 @@ plugins {
 group = "com.christophsturm"
 version = "0.1.2"
 
-buildscript {
-    configurations.maybeCreate("pitest")
-    dependencies {
-        "pitest"("org.pitest:pitest-junit5-plugin:0.12")
-    }
-}
-
-
 repositories {
     //    maven { setUrl("http://dl.bintray.com/kotlin/kotlin-eap") }
     jcenter()
@@ -103,12 +95,12 @@ bintray {
 plugins.withId("info.solidsoft.pitest") {
     configure<PitestPluginExtension> {
         jvmArgs.set(listOf("-Xmx512m"))
-        testPlugin.set("junit5")
+        testPlugin.set("failfast")
         avoidCallsTo.set(setOf("kotlin.jvm.internal"))
 //        mutators.set(setOf("NEW_DEFAULTS"))
         targetClasses.set(setOf("filepeek.*"))  //by default "${project.group}.*"
         targetTests.set(setOf("filepeek.*", "filepeektest.*"))
-        pitestVersion.set("1.4.11")
+        pitestVersion.set("1.6.2")
         threads.set(System.getenv("PITEST_THREADS")?.toInt() ?: Runtime.getRuntime().availableProcessors())
         outputFormats.set(setOf("XML", "HTML"))
     }
