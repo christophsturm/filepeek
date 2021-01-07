@@ -20,14 +20,6 @@ plugins {
 group = "com.christophsturm"
 version = "0.1.2"
 
-buildscript {
-    configurations.maybeCreate("pitest")
-    dependencies {
-        "pitest"("org.pitest:pitest-junit5-plugin:0.12")
-    }
-}
-
-
 repositories {
     //    maven { setUrl("http://dl.bintray.com/kotlin/kotlin-eap") }
     jcenter()
@@ -38,7 +30,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8", kotlinVersion))
     implementation(kotlin("reflect", kotlinVersion))
     testImplementation("io.strikt:strikt-core:0.28.1")
-    testImplementation("dev.minutest:minutest:1.10.0")
+    testImplementation("com.christophsturm:failfast:0.1.1")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junit5Version")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitPlatformVersion")
@@ -103,12 +95,12 @@ bintray {
 plugins.withId("info.solidsoft.pitest") {
     configure<PitestPluginExtension> {
         jvmArgs.set(listOf("-Xmx512m"))
-        testPlugin.set("junit5")
+        testPlugin.set("failfast")
         avoidCallsTo.set(setOf("kotlin.jvm.internal"))
 //        mutators.set(setOf("NEW_DEFAULTS"))
         targetClasses.set(setOf("filepeek.*"))  //by default "${project.group}.*"
         targetTests.set(setOf("filepeek.*", "filepeektest.*"))
-        pitestVersion.set("1.4.11")
+        pitestVersion.set("1.6.2")
         threads.set(System.getenv("PITEST_THREADS")?.toInt() ?: Runtime.getRuntime().availableProcessors())
         outputFormats.set(setOf("XML", "HTML"))
     }
@@ -134,3 +126,11 @@ tasks.named<com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask>("
     }
 }
 tasks.wrapper { distributionType = Wrapper.DistributionType.ALL }
+val testMain = task("testMain", JavaExec::class) {
+    main = "filepeek.AllTestsKt"
+    classpath = sourceSets["test"].runtimeClasspath
+}
+
+tasks.check {
+    dependsOn(testMain)
+}
