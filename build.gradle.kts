@@ -38,7 +38,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8", kotlinVersion))
     implementation(kotlin("reflect", kotlinVersion))
     testImplementation("io.strikt:strikt-core:0.28.1")
-    testImplementation("dev.minutest:minutest:1.10.0")
+    testImplementation("com.christophsturm:failfast:0.1.1")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junit5Version")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitPlatformVersion")
@@ -134,3 +134,11 @@ tasks.named<com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask>("
     }
 }
 tasks.wrapper { distributionType = Wrapper.DistributionType.ALL }
+val testMain = task("testMain", JavaExec::class) {
+    main = "filepeek.AllTestsKt"
+    classpath = sourceSets["test"].runtimeClasspath
+}
+
+tasks.check {
+    dependsOn(testMain)
+}
