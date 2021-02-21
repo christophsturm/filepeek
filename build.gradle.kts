@@ -1,4 +1,3 @@
-import com.jfrog.bintray.gradle.BintrayExtension
 import info.solidsoft.gradle.pitest.PitestPluginExtension
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -12,7 +11,6 @@ plugins {
     kotlin("jvm") version "1.4.30"
     id("com.github.ben-manes.versions") version "0.36.0"
     `maven-publish`
-    id("com.jfrog.bintray") version "1.8.4"
     id("info.solidsoft.pitest") version "1.5.2"
     signing
 }
@@ -22,15 +20,14 @@ version = "0.1.3"
 
 repositories {
     //    maven { setUrl("http://dl.bintray.com/kotlin/kotlin-eap") }
-    jcenter()
     mavenCentral()
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8", kotlinVersion))
     implementation(kotlin("reflect", kotlinVersion))
-    testImplementation("io.strikt:strikt-core:0.28.1")
-    testImplementation("com.christophsturm:failfast:0.1.1")
+    testImplementation("io.strikt:strikt-core:0.29.0")
+    testImplementation("com.christophsturm.failfast:failfast:0.3.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junit5Version")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitPlatformVersion")
@@ -109,21 +106,6 @@ signing {
     sign(publishing.publications["mavenJava"])
 }
 
-
-// BINTRAY_API_KEY= ... ./gradlew clean check publish bintrayUpload
-bintray {
-    user = "christophsturm"
-    key = System.getenv("BINTRAY_API_KEY")
-    publish = true
-    setPublications("mavenJava")
-    pkg(delegateClosureOf<BintrayExtension.PackageConfig> {
-        repo = "maven"
-        name = "filepeek"
-        version(delegateClosureOf<BintrayExtension.VersionConfig> {
-            name = project.version as String
-        })
-    })
-}
 
 plugins.withId("info.solidsoft.pitest") {
     configure<PitestPluginExtension> {
