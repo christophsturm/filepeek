@@ -16,8 +16,6 @@ dependencies{
 }
 ```
 
-I originally wrote it for my poc assertion lib asserto, then integrated it into stri.kt and now extracted it for use in atrium.
-
 example use:
 
 ```
