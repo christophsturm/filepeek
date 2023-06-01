@@ -15,10 +15,10 @@ class FilePeek(
     private val ignoredPackages: List<String> = emptyList(),
     private val sourceRoots: List<String> = listOf("src${FS}test${FS}kotlin", "src${FS}test${FS}java")
 ) {
+    fun getCallerFileInfo() = getCallerFileInfo(RuntimeException())
 
-    fun getCallerFileInfo(
-    ): FileInfo {
-        val stackTrace = RuntimeException().stackTrace
+    fun getCallerFileInfo(ex: Throwable): FileInfo {
+        val stackTrace = ex.stackTrace
 
         val callerStackTraceElement = stackTrace.first { el ->
             ignoredPackages
