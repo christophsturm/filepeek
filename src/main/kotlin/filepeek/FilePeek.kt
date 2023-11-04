@@ -34,6 +34,7 @@ class FilePeek(
             classFilePath.contains("build${FS}classes${FS}java") -> "build${FS}classes${FS}java${FS}test" // gradle 4.x java source
             classFilePath.contains("build${FS}classes${FS}kotlin") -> "build${FS}classes${FS}kotlin${FS}test" // gradle 4.x kotlin sources
             classFilePath.contains("target${FS}classes") -> "target${FS}classes" // maven
+            classFilePath.contains("target${FS}test-classes") -> "target${FS}test-classes" // maven
             else -> "build${FS}classes${FS}test" // older gradle
         }
 
